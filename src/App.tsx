@@ -25,6 +25,7 @@ export default function App() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isStaticHost, setIsStaticHost] = useState(false);
   const uploadedMediaRef = useRef<Set<string>>(new Set());
   
   const [darkMode, setDarkMode] = useState<boolean>(() => {
@@ -54,7 +55,10 @@ export default function App() {
       try {
         let response = await fetch('/api/data');
         if (!response.ok) {
+          setIsStaticHost(true);
           response = await fetch('./data.json');
+        } else {
+          setIsStaticHost(false);
         }
         if (response.ok) {
           const apiData = await response.json();
@@ -247,83 +251,91 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-6">
-            {/* View Toggle */}
-            <div className="flex p-0.5 border border-[#1A1A1A] dark:border-[#F5F5F3]">
-              <button
-                onClick={() => setIsEditMode(false)}
-                className={cn(
-                  "px-4 py-1 text-[10px] uppercase tracking-[1px] font-bold transition-all",
-                  !isEditMode ? "bg-[#1A1A1A] text-[#F5F5F3] dark:bg-[#F5F5F3] dark:text-[#1A1A1A]" : "bg-transparent hover:opacity-70"
-                )}
-              >
-                View
-              </button>
-              <button
-                onClick={() => setIsEditMode(true)}
-                className={cn(
-                  "px-4 py-1 text-[10px] uppercase tracking-[1px] font-bold transition-all",
-                  isEditMode ? "bg-[#1A1A1A] text-[#F5F5F3] dark:bg-[#F5F5F3] dark:text-[#1A1A1A]" : "bg-transparent hover:opacity-70"
-                )}
-              >
-                Edit
-              </button>
-            </div>
+            {!isStaticHost && (
+              <>
+                {/* View Toggle */}
+                <div className="flex p-0.5 border border-[#1A1A1A] dark:border-[#F5F5F3]">
+                  <button
+                    onClick={() => setIsEditMode(false)}
+                    className={cn(
+                      "px-4 py-1 text-[10px] uppercase tracking-[1px] font-bold transition-all",
+                      !isEditMode ? "bg-[#1A1A1A] text-[#F5F5F3] dark:bg-[#F5F5F3] dark:text-[#1A1A1A]" : "bg-transparent hover:opacity-70"
+                    )}
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => setIsEditMode(true)}
+                    className={cn(
+                      "px-4 py-1 text-[10px] uppercase tracking-[1px] font-bold transition-all",
+                      isEditMode ? "bg-[#1A1A1A] text-[#F5F5F3] dark:bg-[#F5F5F3] dark:text-[#1A1A1A]" : "bg-transparent hover:opacity-70"
+                    )}
+                  >
+                    Edit
+                  </button>
+                </div>
 
-            <div className="h-4 w-px bg-[#1A1A1A] dark:bg-[#F5F5F3] hidden sm:block"></div>
+                <div className="h-4 w-px bg-[#1A1A1A] dark:bg-[#F5F5F3] hidden sm:block"></div>
+              </>
+            )}
 
             {/* Actions */}
             <div className="flex items-center gap-4">
-              <button 
-                onClick={() => fileInputRef.current?.click()}
-                title="Import JSON"
-                className="text-[10px] uppercase tracking-[1px] font-bold hover:underline"
-              >
-                IMPORT JSON
-              </button>
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleImportJSON}
-                accept=".json"
-                className="hidden"
-              />
-              <button 
-                onClick={handleExportJSON}
-                title="Export JSON"
-                className="text-[10px] uppercase tracking-[1px] font-bold hover:underline"
-              >
-                EXPORT JSON
-              </button>
-              <div className="h-4 w-px bg-[#1A1A1A] dark:bg-[#F5F5F3] opacity-30"></div>
-              {user ? (
-                <button 
-                  onClick={handleLogout}
-                  className="text-[10px] uppercase tracking-[1px] font-bold hover:underline"
-                >
-                  LOGOUT
-                </button>
-              ) : (
-                <button 
-                  onClick={handleLogin}
-                  className="text-[10px] uppercase tracking-[1px] font-bold hover:underline"
-                >
-                  LOAD FIREBASE DATA (LOGIN)
-                </button>
+              {!isStaticHost && (
+                <>
+                  <button 
+                    onClick={() => fileInputRef.current?.click()}
+                    title="Import JSON"
+                    className="text-[10px] uppercase tracking-[1px] font-bold hover:underline"
+                  >
+                    IMPORT JSON
+                  </button>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleImportJSON}
+                    accept=".json"
+                    className="hidden"
+                  />
+                  <button 
+                    onClick={handleExportJSON}
+                    title="Export JSON"
+                    className="text-[10px] uppercase tracking-[1px] font-bold hover:underline"
+                  >
+                    EXPORT JSON
+                  </button>
+                  <div className="h-4 w-px bg-[#1A1A1A] dark:bg-[#F5F5F3] opacity-30"></div>
+                  {user ? (
+                    <button 
+                      onClick={handleLogout}
+                      className="text-[10px] uppercase tracking-[1px] font-bold hover:underline"
+                    >
+                      LOGOUT
+                    </button>
+                  ) : (
+                    <button 
+                      onClick={handleLogin}
+                      className="text-[10px] uppercase tracking-[1px] font-bold hover:underline"
+                    >
+                      LOAD FIREBASE DATA (LOGIN)
+                    </button>
+                  )}
+                  <button 
+                    onClick={handleExportHTML}
+                    title="Download HTML"
+                    className="text-[10px] uppercase tracking-[1px] font-bold hover:underline"
+                  >
+                    HTML
+                  </button>
+                  <button 
+                    onClick={handlePrint}
+                    title="Export as PDF"
+                    className="text-[10px] uppercase tracking-[1px] font-bold hover:underline"
+                  >
+                    PDF
+                  </button>
+                </>
               )}
-              <button 
-                onClick={handlePrint}
-                title="Export as PDF"
-                className="text-[10px] uppercase tracking-[1px] font-bold hover:underline"
-              >
-                PDF
-              </button>
-              <button 
-                onClick={handleExportHTML}
-                title="Download HTML"
-                className="text-[10px] uppercase tracking-[1px] font-bold hover:underline"
-              >
-                HTML
-              </button>
               <button 
                 onClick={() => setDarkMode(!darkMode)}
                 title="Toggle Dark Mode"
@@ -340,7 +352,7 @@ export default function App() {
 
       {/* Main Content */}
       <div className="pb-24">
-        {isEditMode && user ? (
+        {isEditMode && user && !isStaticHost ? (
           <Dashboard data={data} setData={handleUpdateData} />
         ) : (
           <Portfolio data={data} />
