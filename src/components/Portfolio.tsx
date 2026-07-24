@@ -123,7 +123,7 @@ export default function Portfolio({ data }: PortfolioProps) {
   }, []);
 
   return (
-    <div className="max-w-5xl mx-auto px-6 pt-4 md:pt-6 pb-12 md:pb-24 space-y-16 print:py-0 print:space-y-8">
+    <div className="max-w-5xl mx-auto px-6 pt-3 md:pt-4 pb-12 md:pb-24 print:py-0">
       {/* Telemetry Bar */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#1A1A1A]/10 dark:border-[#F5F5F3]/10 pb-2 text-[9px] font-mono opacity-60 tracking-[1.5px] uppercase print:hidden">
         <div className="flex items-center gap-2">
@@ -140,7 +140,7 @@ export default function Portfolio({ data }: PortfolioProps) {
       <motion.header 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="space-y-6 print:space-y-4"
+        className="space-y-6 pt-4 md:pt-6 print:space-y-4"
       >
         <h1 className="text-5xl md:text-[72px] leading-[0.9] uppercase font-bold tracking-tight">
           <ScrambleText text={data.name} />
@@ -169,7 +169,7 @@ export default function Portfolio({ data }: PortfolioProps) {
       </motion.header>
 
       {/* Projects Section */}
-      <main className="space-y-12 print:space-y-6">
+      <main className="space-y-12 pt-12 md:pt-16 print:space-y-6">
         <div className="flex items-center justify-between border-b border-[#1A1A1A] dark:border-[#F5F5F3] pb-3">
           <h2 className="text-[11px] font-mono uppercase tracking-[2px] font-bold flex items-center gap-2">
             <span className="inline-block w-2 h-2 bg-lime-500 dark:bg-[#D8FF00] border border-black dark:border-white"></span>
