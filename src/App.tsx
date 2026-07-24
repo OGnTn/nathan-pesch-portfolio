@@ -40,9 +40,6 @@ export default function App() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      if (!currentUser) {
-        setIsEditMode(false);
-      }
     }, (error) => {
       console.error("Auth state error:", error);
     });
@@ -390,7 +387,7 @@ export default function App() {
 
       {/* Main Content */}
       <div className="pb-24">
-        {isEditMode && user && !isStaticHost ? (
+        {isEditMode && !isStaticHost ? (
           <Dashboard data={data} setData={handleUpdateData} />
         ) : (
           <Portfolio data={data} />
