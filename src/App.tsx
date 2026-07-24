@@ -52,22 +52,41 @@ export default function App() {
   // Handle Data Sync
   useEffect(() => {
     const fetchData = async () => {
+      let loadedData = null;
+      let isStatic = true;
+
       try {
-        let response = await fetch('/api/data');
-        if (!response.ok) {
-          setIsStaticHost(true);
-          response = await fetch('./data.json');
+        const response = await fetch('/api/data');
+        const contentType = response.headers.get("content-type");
+        
+        // If the server returns JSON (even a 404 error JSON), it's our Express backend
+        if (contentType && contentType.includes("application/json")) {
+          isStatic = false;
+          if (response.ok) {
+            loadedData = await response.json();
+          }
         } else {
-          setIsStaticHost(false);
-        }
-        if (response.ok) {
-          const apiData = await response.json();
-          setData(apiData);
-          setLoading(false);
-          return;
+          // It's a static host (like GitHub Pages) returning HTML for a 404
+          isStatic = true;
+          const staticResponse = await fetch('./data.json');
+          if (staticResponse.ok) {
+            const staticContentType = staticResponse.headers.get("content-type");
+            if (staticContentType && staticContentType.includes("application/json")) {
+              loadedData = await staticResponse.json();
+            }
+          }
         }
       } catch (err) {
-        console.log("Local API not running or data.json not found, falling back to Firebase...");
+        console.log("Network error checking API, assuming static host.");
+        isStatic = true;
+      }
+
+      setIsStaticHost(isStatic);
+
+      if (loadedData && !loadedData.error) {
+        setData(loadedData);
+        setLoading(false);
+        return;
       }
 
       // Fallback to Firebase
