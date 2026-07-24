@@ -287,7 +287,7 @@ export default function App() {
     <div className="min-h-screen font-sans transition-colors duration-200 bg-[#F5F5F3] text-[#1A1A1A] dark:bg-[#1A1A1A] dark:text-[#F5F5F3]">
       {/* Navigation / Toolbar - Hidden when printing */}
       <nav className="sticky top-0 z-50 bg-[#F5F5F3] dark:bg-[#1A1A1A] border-b border-[#1A1A1A] dark:border-[#F5F5F3] print:hidden">
-        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="max-w-5xl mx-auto px-6 h-10 flex items-center justify-between">
           <div className="flex items-center gap-4">
           </div>
 
@@ -379,11 +379,20 @@ export default function App() {
               )}
               <button 
                 onClick={() => setDarkMode(!darkMode)}
-                title="Toggle Dark Mode"
-                className="flex items-center gap-2 ml-2"
+                title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                className="relative flex items-center w-11 h-6 px-0.5 rounded-full border border-[#1A1A1A] dark:border-[#F5F5F3] bg-[#E0E0DE] dark:bg-[#2A2A2A] transition-colors ml-2 cursor-pointer"
               >
-                <div className="w-8 h-4 bg-[#1A1A1A] dark:bg-[#F5F5F3] rounded-full relative">
-                  <div className={cn("w-3 h-3 bg-[#F5F5F3] dark:bg-[#1A1A1A] rounded-full absolute top-0.5 transition-all", darkMode ? "right-0.5" : "left-0.5")} />
+                <div 
+                  className={cn(
+                    "w-5 h-5 rounded-full bg-[#1A1A1A] dark:bg-[#F5F5F3] flex items-center justify-center transition-transform duration-200 shadow-sm",
+                    darkMode ? "translate-x-5" : "translate-x-0"
+                  )}
+                >
+                  {darkMode ? (
+                    <Moon className="w-3 h-3 text-[#1A1A1A]" />
+                  ) : (
+                    <Sun className="w-3 h-3 text-[#F5F5F3]" />
+                  )}
                 </div>
               </button>
             </div>

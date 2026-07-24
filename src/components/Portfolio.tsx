@@ -73,7 +73,7 @@ export default function Portfolio({ data }: PortfolioProps) {
   }, []);
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-12 md:py-24 space-y-16 print:py-0 print:space-y-8">
+    <div className="max-w-5xl mx-auto px-6 pt-6 md:pt-10 pb-12 md:pb-24 space-y-16 print:py-0 print:space-y-8">
       {/* Hero Section */}
       <motion.header 
         initial={{ opacity: 0, y: 20 }}
@@ -119,14 +119,14 @@ export default function Portfolio({ data }: PortfolioProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="group break-inside-avoid print:mb-8"
+              className="break-inside-avoid print:mb-8"
             >
               <div className="space-y-6">
-                <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-4">
+                <div className="flex items-baseline justify-between gap-4">
                   <h3 className="text-3xl md:text-4xl uppercase">
                     {project.title}
                   </h3>
-                  <div className="text-[48px] font-light leading-none opacity-20">
+                  <div className="hidden md:block text-[48px] font-light leading-none opacity-20">
                     {(index + 1).toString().padStart(2, '0')}
                   </div>
                 </div>
