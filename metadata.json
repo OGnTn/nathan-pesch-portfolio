@@ -1,0 +1,6 @@
+{
+  "name": "Portfolio Builder",
+  "description": "A responsive portfolio website with a drag-and-drop dashboard, custom tags, and export capabilities (PDF & Static HTML).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
