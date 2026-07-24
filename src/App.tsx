@@ -237,6 +237,12 @@ export default function App() {
     }
   }, [darkMode]);
 
+  useEffect(() => {
+    if (data?.name) {
+      document.title = `${data.name} - Portfolio`;
+    }
+  }, [data?.name]);
+
   const handleExportHTML = () => {
     const htmlString = generateStaticHTML(data);
     downloadFile(`${data.name.replace(/\\s+/g, '_').toLowerCase()}_portfolio.html`, htmlString, 'text/html');
