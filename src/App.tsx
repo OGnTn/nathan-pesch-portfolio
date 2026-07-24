@@ -31,6 +31,8 @@ export default function App() {
       if (!currentUser) {
         setIsEditMode(false);
       }
+    }, (error) => {
+      console.error("Auth state error:", error);
     });
     return () => unsubscribe();
   }, []);
