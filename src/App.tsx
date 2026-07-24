@@ -71,12 +71,22 @@ export default function App() {
     
     if (user) {
       try {
-        await setDoc(doc(db, 'portfolios', 'main'), {
+        const docData = {
           ...updatedData,
           ownerUid: user.uid
-        });
+        };
+        
+        // Firestore limit is ~1MB (1,048,576 bytes)
+        const payloadString = JSON.stringify(docData);
+        if (payloadString.length > 900000) { // Rough safety margin
+          alert("Your portfolio data is too large to save. Please reduce the size or number of uploaded images.");
+          return;
+        }
+
+        await setDoc(doc(db, 'portfolios', 'main'), docData);
       } catch (error) {
         console.error("Error saving to Firestore", error);
+        alert("Error saving: Data might be too large.");
       }
     } else {
       // Save locally if not logged in

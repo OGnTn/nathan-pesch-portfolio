@@ -168,11 +168,49 @@ function ProjectEditor({ project, isEditing, onToggleEdit, onUpdate, onDelete }:
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 1024 * 1024 && file.type.startsWith('video/')) {
+        alert("Video files must be under 1MB.");
+        return;
+      }
+      
       const reader = new FileReader();
-      reader.onloadend = () => {
-        onUpdate({ images: [...project.images, reader.result as string] });
-      };
-      reader.readAsDataURL(file);
+      if (file.type.startsWith('video/')) {
+        reader.onloadend = () => {
+          onUpdate({ images: [...project.images, reader.result as string] });
+        };
+        reader.readAsDataURL(file);
+      } else {
+        reader.onload = (event) => {
+          const img = new window.Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let { width, height } = img;
+            const MAX_DIMENSION = 1200;
+            
+            if (width > height && width > MAX_DIMENSION) {
+              height = (height * MAX_DIMENSION) / width;
+              width = MAX_DIMENSION;
+            } else if (height > MAX_DIMENSION) {
+              width = (width * MAX_DIMENSION) / height;
+              height = MAX_DIMENSION;
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx?.drawImage(img, 0, 0, width, height);
+            
+            const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.6);
+            if (compressedDataUrl.length > 1048576) {
+              alert("Image is too large even after compression.");
+              return;
+            }
+            onUpdate({ images: [...project.images, compressedDataUrl] });
+          };
+          img.src = event.target?.result as string;
+        };
+        reader.readAsDataURL(file);
+      }
     }
   };
 
