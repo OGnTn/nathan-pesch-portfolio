@@ -45,6 +45,10 @@ app.get("/api/data", (req, res) => {
 app.post("/api/data", (req, res) => {
   const dataPath = path.join(process.cwd(), "public", "data.json");
   fs.writeFileSync(dataPath, JSON.stringify(req.body, null, 2));
+  const rootDataPath = path.join(process.cwd(), "data.json");
+  if (fs.existsSync(rootDataPath)) {
+    fs.writeFileSync(rootDataPath, JSON.stringify(req.body, null, 2));
+  }
   res.json({ success: true });
 });
 
