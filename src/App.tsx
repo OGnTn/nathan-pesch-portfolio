@@ -129,12 +129,31 @@ export default function App() {
           }
           
           setData(parsedData as PortfolioData);
+          // Sync to local API so it can be exported
+          try {
+            await fetch('/api/data', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(parsedData),
+            });
+          } catch (e) {
+            console.error("Error syncing to local API", e);
+          }
         } else {
           // Migration from IndexedDB if Firestore is empty
           try {
             const idbData = await get('portfolio-data');
             if (idbData) {
               setData(idbData);
+              try {
+                await fetch('/api/data', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(idbData),
+                });
+              } catch (e) {
+                console.error("Error syncing to local API", e);
+              }
             }
           } catch (error) {
             console.error(error);
