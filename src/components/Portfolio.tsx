@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Project, PortfolioData } from '../types';
 import { Mail, Code, Briefcase, ExternalLink } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -6,6 +6,40 @@ import Markdown from 'react-markdown';
 
 interface PortfolioProps {
   data: PortfolioData;
+}
+
+function LazyMedia({ src, alt }: { src: string; alt: string }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const isVideo = src.startsWith('data:video/') || Boolean(src.match(/\.(mp4|webm|ogg|mov)$/i));
+
+  return (
+    <div className="relative border border-[#1A1A1A] dark:border-[#F5F5F3] bg-[#E0E0DE] dark:bg-[#2A2A2A] break-inside-avoid mb-4 overflow-hidden min-h-[120px]">
+      {!isLoaded && (
+        <div className="absolute inset-0 bg-[#E0E0DE] dark:bg-[#2A2A2A] animate-pulse flex items-center justify-center text-[9px] uppercase tracking-[1px] opacity-40">
+          Loading...
+        </div>
+      )}
+      {isVideo ? (
+        <video 
+          src={src} 
+          controls 
+          preload="metadata"
+          onLoadedData={() => setIsLoaded(true)}
+          className={`w-full h-auto block transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+        />
+      ) : (
+        <img 
+          src={src} 
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+          onLoad={() => setIsLoaded(true)}
+          className={`w-full h-auto block transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+          referrerPolicy="no-referrer"
+        />
+      )}
+    </div>
+  );
 }
 
 export default function Portfolio({ data }: PortfolioProps) {
@@ -86,22 +120,11 @@ export default function Portfolio({ data }: PortfolioProps) {
                 {project.images.length > 0 && (
                   <div className="columns-2 sm:columns-3 md:columns-4 gap-4 pt-4 print:hidden">
                     {project.images.map((mediaUrl, i) => (
-                      <div key={i} className="relative border border-[#1A1A1A] dark:border-[#F5F5F3] bg-[#E0E0DE] dark:bg-[#2A2A2A] break-inside-avoid mb-4">
-                        {mediaUrl.startsWith('data:video/') || mediaUrl.match(/\.(mp4|webm|ogg|mov)$/i) ? (
-                          <video 
-                            src={mediaUrl} 
-                            controls 
-                            className="w-full h-auto block"
-                          />
-                        ) : (
-                          <img 
-                            src={mediaUrl} 
-                            alt={`${project.title} media ${i + 1}`}
-                            className="w-full h-auto block"
-                            referrerPolicy="no-referrer"
-                          />
-                        )}
-                      </div>
+                      <LazyMedia 
+                        key={i} 
+                        src={mediaUrl} 
+                        alt={`${project.title} media ${i + 1}`} 
+                      />
                     ))}
                   </div>
                 )}

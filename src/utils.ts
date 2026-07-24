@@ -17,10 +17,10 @@ export function generateStaticHTML(data: PortfolioData): string {
       ${p.images.length > 0 ? `
         <div class="images">
           ${p.images.map((mediaUrl, i) => {
-            if (mediaUrl.startsWith('data:video/')) {
-              return `<video src="${mediaUrl}" controls class="media-item"></video>`;
+            if (mediaUrl.startsWith('data:video/') || mediaUrl.match(/\.(mp4|webm|ogg|mov)$/i)) {
+              return `<video src="${mediaUrl}" controls preload="metadata" class="media-item"></video>`;
             }
-            return `<img src="${mediaUrl}" alt="${p.title} media ${i + 1}" class="media-item" />`;
+            return `<img src="${mediaUrl}" alt="${p.title} media ${i + 1}" loading="lazy" decoding="async" class="media-item" />`;
           }).join('')}
         </div>
       ` : ''}
