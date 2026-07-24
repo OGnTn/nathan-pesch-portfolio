@@ -65,7 +65,7 @@ export default function App() {
         } else {
           // It's a static host (like GitHub Pages) returning HTML for a 404
           isStatic = true;
-          const staticResponse = await fetch('./data.json');
+          const staticResponse = await fetch(`./data.json?t=${Date.now()}`, { cache: 'no-cache' });
           if (staticResponse.ok) {
             const staticContentType = staticResponse.headers.get("content-type");
             if (staticContentType && staticContentType.includes("application/json")) {
