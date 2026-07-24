@@ -165,51 +165,32 @@ function ProjectEditor({ project, isEditing, onToggleEdit, onUpdate, onDelete }:
     onUpdate({ tags: project.tags.filter(t => t !== tagToRemove) });
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 1024 * 1024 && file.type.startsWith('video/')) {
-        alert("Video files must be under 1MB.");
+      if (file.size > 50 * 1024 * 1024) {
+        alert("Files must be under 50MB.");
         return;
       }
       
-      const reader = new FileReader();
-      if (file.type.startsWith('video/')) {
-        reader.onloadend = () => {
-          onUpdate({ images: [...project.images, reader.result as string] });
-        };
-        reader.readAsDataURL(file);
-      } else {
-        reader.onload = (event) => {
-          const img = new window.Image();
-          img.onload = () => {
-            const canvas = document.createElement('canvas');
-            let { width, height } = img;
-            const MAX_DIMENSION = 1200;
-            
-            if (width > height && width > MAX_DIMENSION) {
-              height = (height * MAX_DIMENSION) / width;
-              width = MAX_DIMENSION;
-            } else if (height > MAX_DIMENSION) {
-              width = (width * MAX_DIMENSION) / height;
-              height = MAX_DIMENSION;
-            }
-            
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx?.drawImage(img, 0, 0, width, height);
-            
-            const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.6);
-            if (compressedDataUrl.length > 1048576) {
-              alert("Image is too large even after compression.");
-              return;
-            }
-            onUpdate({ images: [...project.images, compressedDataUrl] });
-          };
-          img.src = event.target?.result as string;
-        };
-        reader.readAsDataURL(file);
+      const formData = new FormData();
+      formData.append("file", file);
+      
+      try {
+        const response = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+        
+        if (response.ok) {
+          const result = await response.json();
+          onUpdate({ images: [...project.images, result.url] });
+        } else {
+          alert("Failed to upload file");
+        }
+      } catch (error) {
+        console.error("Upload error", error);
+        alert("Upload error");
       }
     }
   };
@@ -301,7 +282,7 @@ function ProjectEditor({ project, isEditing, onToggleEdit, onUpdate, onDelete }:
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {project.images.map((img, i) => (
                 <div key={i} className="group relative aspect-video border border-[#1A1A1A] dark:border-[#F5F5F3] bg-[#E0E0DE] dark:bg-[#2A2A2A] overflow-hidden">
-                  {img.startsWith('data:video/') ? (
+                  {img.startsWith('data:video/') || img.match(/\.(mp4|webm|ogg|mov)$/i) ? (
                     <video src={img} className="w-full h-full object-cover" muted playsInline />
                   ) : (
                     <img src={img} alt="" className="w-full h-full object-cover" />

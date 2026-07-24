@@ -87,7 +87,7 @@ export default function Portfolio({ data }: PortfolioProps) {
                   <div className="columns-2 sm:columns-3 md:columns-4 gap-4 pt-4 print:hidden">
                     {project.images.map((mediaUrl, i) => (
                       <div key={i} className="relative border border-[#1A1A1A] dark:border-[#F5F5F3] bg-[#E0E0DE] dark:bg-[#2A2A2A] break-inside-avoid mb-4">
-                        {mediaUrl.startsWith('data:video/') ? (
+                        {mediaUrl.startsWith('data:video/') || mediaUrl.match(/\.(mp4|webm|ogg|mov)$/i) ? (
                           <video 
                             src={mediaUrl} 
                             controls 
