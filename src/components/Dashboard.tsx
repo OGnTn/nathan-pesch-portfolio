@@ -98,6 +98,16 @@ export default function Dashboard({ data, setData }: DashboardProps) {
               className="w-full px-4 py-3 rounded-none border border-[#1A1A1A] dark:border-[#F5F5F3] bg-transparent focus:bg-[#EAEAEA] dark:focus:bg-[#2A2A2A] outline-none transition-all"
             />
           </div>
+          <div className="space-y-2">
+            <label className="text-[10px] uppercase tracking-[1px] font-bold block mb-2">CV / Resume File Path</label>
+            <input 
+              type="text" 
+              value={data.cv || ''} 
+              onChange={e => handleUpdateProfile('cv', e.target.value)}
+              placeholder="./nathan_pesch_cv_2026.pdf"
+              className="w-full px-4 py-3 rounded-none border border-[#1A1A1A] dark:border-[#F5F5F3] bg-transparent focus:bg-[#EAEAEA] dark:focus:bg-[#2A2A2A] outline-none transition-all"
+            />
+          </div>
         </div>
       </div>
 

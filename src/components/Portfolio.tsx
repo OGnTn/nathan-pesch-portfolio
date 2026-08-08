@@ -164,6 +164,17 @@ export default function Portfolio({ data }: PortfolioProps) {
               <span>LinkedIn</span>
             </a>
           )}
+          {(data.cv || './nathan_pesch_cv_2026.pdf') && (
+            <a 
+              href={data.cv || './nathan_pesch_cv_2026.pdf'} 
+              download="nathan_pesch_cv_2026.pdf" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="flex items-center gap-2 text-[10px] uppercase tracking-[2px] font-bold hover:underline"
+            >
+              <span>Download CV</span>
+            </a>
+          )}
         </div>
       </motion.header>
 

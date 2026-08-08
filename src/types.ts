@@ -12,6 +12,7 @@ export interface PortfolioData {
   email: string;
   github: string;
   linkedin: string;
+  cv?: string;
   projects: Project[];
 }
 
@@ -21,6 +22,7 @@ export const defaultPortfolioData: PortfolioData = {
   email: "jane@example.com",
   github: "https://github.com/janedoe",
   linkedin: "https://linkedin.com/in/janedoe",
+  cv: "./nathan_pesch_cv_2026.pdf",
   projects: [
     {
       id: "1",

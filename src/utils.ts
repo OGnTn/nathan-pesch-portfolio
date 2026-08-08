@@ -69,6 +69,7 @@ export function generateStaticHTML(data: PortfolioData): string {
         ${data.email ? `<a href="mailto:${data.email}" class="header-link">Email</a>` : ''}
         ${data.github ? `<a href="${data.github}" class="header-link">GitHub</a>` : ''}
         ${data.linkedin ? `<a href="${data.linkedin}" class="header-link">LinkedIn</a>` : ''}
+        ${(data.cv || './nathan_pesch_cv_2026.pdf') ? `<a href="${data.cv || './nathan_pesch_cv_2026.pdf'}" download="nathan_pesch_cv_2026.pdf" class="header-link">Download CV</a>` : ''}
       </div>
     </header>
     <main>
